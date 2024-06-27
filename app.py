@@ -8,7 +8,7 @@ from datetime import datetime
 
 # Mendapatkan API Key dari Tiingo
 api_key = '60b72460f66eed7ec99a062003fe6a87bb8e94bb'
-
+#Pengambilan Data
 def get_historical_data(ticker, start_date, end_date):
     url = f'https://api.tiingo.com/tiingo/daily/{ticker}/prices?startDate={start_date}&endDate={end_date}&token={api_key}'
     response = requests.get(url)
@@ -21,13 +21,13 @@ def main():
     ticker = st.text_input('Masukkan ticker saham (misal: AAPL untuk Apple):')
     start_date = st.date_input('Pilih tanggal awal:')
     end_date = st.date_input('Pilih tanggal akhir:')
-
+    #Pre-processing data
     if st.button('Proses'):
         historical_data = get_historical_data(ticker, start_date.strftime('%Y-%m-%d'), end_date.strftime('%Y-%m-%d'))
         df = pd.DataFrame(historical_data)
         df['date'] = pd.to_datetime(df['date'])
         df.set_index('date', inplace=True)
-
+        #Menggunakan scikit-learn untuk model regresi
         df['timestamp'] = df.index.map(datetime.timestamp)
         X = df['timestamp'].values.reshape(-1, 1)
         y = df['close'].values
@@ -41,7 +41,7 @@ def main():
         mse = mean_squared_error(y, df['trend'])
         r2 = r2_score(y, df['trend'])
 
-        # Menampilkan plot menggunakan Matplotlib
+        # Menampilkan plot menggunakan Matplotlib dan garis tren
         plt.figure(figsize=(14, 7))
         plt.plot(df.index, df['close'], label='Harga Penutupan')
         plt.plot(df.index, df['trend'], label='Tren', linestyle='--')
