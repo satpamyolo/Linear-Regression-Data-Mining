@@ -59,3 +59,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+st.markdown("""
+---
+© 2024 Yohanes Satria Pamungkas. All Rights Reserved.
+""", unsafe_allow_html=True)
